@@ -1,6 +1,6 @@
 <nav class="bg-gray-800 p-5 flex justify-around">
   <div class="flex items-center">
-    <div class="flex-shrink-0 text-slate-200">
+    <div class="flex-shrink-0 hover:border-zinc-100 hover:border-4 text-slate-200">
       <a href="{% url 'home' %}">CRM-SYS-IT</a>
     </div>
     </div>
@@ -9,19 +9,28 @@
   {% if user.is_authenticated %}
   <div class="flex text-slate-100">
     <a
+    href="{% url 'add_record' %}"
+    class="block px-4 hover:border-zinc-100 hover:border-2 py-2 text-sm text-gray-100"
+    role="menuitem"
+    tabindex="-1"
+    id="user-menu-item-2"
+    >Add Record</a
+  >
+    <a
       href="{% url 'logout' %}"
-      class="block px-4 py-2 text-sm text-gray-100"
+      class="block px-4 py-2 hover:border-zinc-100 hover:border-2 text-sm text-gray-100"
       role="menuitem"
       tabindex="-1"
       id="user-menu-item-2"
       >Logout</a
     >
+   
   </div>
   {% else %}
   <div class="flex text-slate-100">
     <a
       href="{% url 'register' %}"
-      class="block px-4 py-2 text-sm text-gray-100"
+      class="block px-4 hover:border-zinc-100 hover:border-2 py-2 text-sm text-gray-100"
       role="menuitem"
       tabindex="-1"
       id="user-menu-item-2"
@@ -31,7 +40,7 @@
   <div class="flex text-slate-100">
     <a
       href="{% url 'home' %}"
-      class="block px-4 py-2 text-sm text-gray-100"
+      class="block px-4 hover:border-zinc-100 hover:border-2 py-2 text-sm text-gray-100"
       role="menuitem"
       tabindex="-1"
       id="user-menu-item-2"
