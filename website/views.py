@@ -1,37 +1,39 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import SignUpForm, AddRecordForm
-from .models import Record
+from .models import Note
 
 # Create your views here.
 def home(request):
-    records = Record.objects.all()
-    
-# check to see if loging in
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+    if request.user.is_authenticated:
+        if request.user.is_superuser:  # Check if the user is admin
+            records = Note.objects.all()  # Fetch all records for admin
+        else:
+            records = Note.objects.filter(user=request.user)  # Fetch records for normal users
+        return render(request, 'home.html', {"records": records})
+    else:
+        return redirect('login')
 
-        # Authenticate
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # Authenticate user
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, "You Have Been Logged In")
+            messages.success(request, "You have been logged in successfully.")
             return redirect("home")
         else:
-            messages.success(request, "There Was  n error Loging in, Please Try Again....")
-            return redirect("home")
-    else:
-        return render(request, 'home.html', {"records": records})
-
-def login_user(request):
-    pass
+            messages.error(request, "Invalid username or password. Please try again.")
+    return render(request, 'login.html')
 
 def logout_user(request):
     logout(request)
-    messages.success(request, "You Have Been Loging out")
-    return redirect("home")
+    return redirect('login')
 
 
 def register_user(request):
@@ -56,7 +58,7 @@ def register_user(request):
 def customer_record(request, pk):
     if request.user.is_authenticated:
         # Look up records
-        customer_record = Record.objects.get(id=pk)
+        customer_record = Note.objects.get(id=pk)
         return render(request, 'record.html', {"customer_record": customer_record})
     else:
         messages.success(request, "You must be log in to veiw this page....")
@@ -64,20 +66,22 @@ def customer_record(request, pk):
     
 def delete_record(request, pk):
     if request.user.is_authenticated:
-        delete_it = Record.objects.get(id=pk)
+        delete_it = Note.objects.get(id=pk)
         delete_it.delete()
         messages.success(request, "You have deleted the record....")
         return redirect("home")
     else:
         messages.success(request, "You must be logged in to do that....")
         return redirect("home")
-
+@login_required
 def add_record(request):
     form = AddRecordForm(request.POST or None)
     if request.user.is_authenticated:
         if request.method == "POST":
             if form.is_valid:
-                add_record = form.save()
+                add_record = form.save(commit=False)
+                add_record.user = request.user
+                add_record.save()
                 messages.success(request, "Record Aadded....")
                 return redirect("home")
         return render(request, 'add_record.html', {'form':form})
@@ -90,7 +94,7 @@ def add_record(request):
 
 def update_record(request, pk):
     if request.user.is_authenticated:
-        current_record = Record.objects.get(id=pk)
+        current_record = Note.objects.get(id=pk)
         form = AddRecordForm(request.POST or None, instance=current_record)
         if form.is_valid():  # Add parentheses to is_valid method
             form.save()

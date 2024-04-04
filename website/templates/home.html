@@ -1,5 +1,5 @@
-{% extends 'base.html' %} {% block content %} {% if user.is_authenticated %}
-<div class="bg-white rounded-md overflow-hidden shadow-md p-6">
+{% extends 'base.html' %} {% block content %}
+<div class="bg-white h-4/5 w-4/5 rounded-md overflow-hidden shadow-md p-6">
   <h1 class="text-slate-950 text-center text-3xl">Records....</h1>
   <br />
   {% if records %}
@@ -107,7 +107,7 @@
               scope="col"
               class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
-              {{record.zipcode}}
+              {{record.user}}
             </td>
           </tr>
           {% endfor %}
@@ -115,48 +115,9 @@
       </table>
     </div>
   </div>
-  {% endif %} {% else %}
-  <div class="w-full max-w-md mx-auto my-32 px-4">
-    <h2 class="text-2xl font-bold text-center mb-4">Login</h2>
-    <form action="{% url 'home' %}" method="POST" class="space-y-4">
-      {% csrf_token %} {% if messages %} {% for message in messages %}
-      <div
-        class="relative bg-red-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg mb-4 cursor-pointer"
-      >
-        <p>{{message}}</p>
-      </div>
-      {% endfor %} {% endif %}
-      <div>
-        <label for="username" class="block text-sm font-medium text-gray-700"
-          >Emai l</label
-        >
-        <input
-          type="text"
-          name="username"
-          placeholder="Username..."
-          required
-          class="mt-1 block w-full shadow-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-2"
-        />
-      </div>
-      <div>
-        <label for="password" class="block text-sm font-medium text-gray-700"
-          >Password</label
-        >
-        <input
-          type="password"
-          name="password"
-          placeholder="Password..."
-          required
-          class="mt-1 block w-full shadow-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 p-2"
-        />
-      </div>
-      <button
-        type="submit"
-        class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-      >
-        Login
-      </button>
-    </form>
-  </div>
+  {%else%}
+  <h1 class="text-slate-950 text-center text-3xl">
+    Hey!! Start adding your records......
+  </h1>
 </div>
 {% endif %} {% endblock content %}

@@ -1,7 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+
 from django import forms
-from .models import Record
+from .models import Note
 
 
 class SignUpForm(UserCreationForm):
@@ -52,5 +53,5 @@ class AddRecordForm(forms.ModelForm):
     zipcode = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={"placeholder":"Zipcode", "class":"mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 p-2 rounded-md"}), label="")
 
     class Meta:
-        model = Record
+        model = Note
         exclude = ("user",)
